@@ -2,18 +2,20 @@ const bcrypt = require("bcryptjs");
 
 const resolvers = {
   Mutation: {
-    register: async (parent, { email, password, username }, ctx, info) => {
+    register: async (parent, {password, username }, ctx, info) => {
+      // Log the input values
+      console.log("Received registration data:", {password, username });
+
+      // Check for null values
+     
+
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Create a new user using email, username, and hashed password
       const user = await ctx.prisma.createUser({
-        data: {
-          email,
-          password: hashedPassword,
-          username,
-
-        },
+        password: hashedPassword,
+        username,
       });
 
       return user;

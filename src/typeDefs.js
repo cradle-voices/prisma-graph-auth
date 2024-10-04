@@ -5,7 +5,6 @@ const typeDefs = gql`
   type User{
     id: ID!
     username: String!
-    email: String!
   }
 
 
@@ -14,8 +13,8 @@ const typeDefs = gql`
   }
 
   type Mutation{
-    register(email: String!, password: String!, username: String): User!
-    login(email: String!, password: String!): LoginResponse!
+    register(password: String!, username: String): User!
+    login(username: String!, password: String!): LoginResponse!
   }
 
   type LoginResponse{
