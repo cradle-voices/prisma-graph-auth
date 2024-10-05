@@ -35,5 +35,44 @@ This repository provides a starting point to work with apollo-server and prisma
 
 
 ```
+## API-Documentation
 
+### Register
+
+**Endpoint:** `http://localhost:8383/`
+
+**Method:** `POST`
+
+**GraphQL Query:**
+
+```graphql
+mutation {
+  register(password: "khhh##4QQWWFF123", email: "sam1@gmail.com") {
+    success
+    message
+    user {
+      id
+      email
+    }
+  }
+}
+
+```
+# Sample response 
+
+```json
+{
+  "data": {
+    "register": {
+      "success": true,
+      "message": "User created successfuly, here is your OTP 705453",
+      "user": {
+        "id": "cm1vz7p5100fr0786gu1dlfsk",
+        "email": "sam1@gmail.com"
+      }
+    }
+  }
+}
+
+```
 
