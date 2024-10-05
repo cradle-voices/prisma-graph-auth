@@ -1,5 +1,22 @@
 type User {
   id: ID! @unique
   email: String @unique
-  password: String!
+  password: String
+  token: String
+  isVerified: Boolean
+  otps: [Otp!] @relation(name: "UserOtps")
+  resetToken: String 
+  resetTokenExpires: DateTime 
 }
+
+type Otp {
+  id: ID! @unique
+  otp: String
+  expires_at: DateTime
+  is_verified: Boolean
+  user: User @relation(name: "UserOtps")
+  userId: String
+}
+
+
+

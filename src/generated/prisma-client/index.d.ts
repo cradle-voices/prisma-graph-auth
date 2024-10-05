@@ -16,6 +16,7 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 export type Maybe<T> = T | undefined | null;
 
 export interface Exists {
+  otp: (where?: OtpWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
 
@@ -38,6 +39,25 @@ export interface Prisma {
    * Queries
    */
 
+  otp: (where: OtpWhereUniqueInput) => OtpNullablePromise;
+  otps: (args?: {
+    where?: OtpWhereInput;
+    orderBy?: OtpOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Otp>;
+  otpsConnection: (args?: {
+    where?: OtpWhereInput;
+    orderBy?: OtpOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => OtpConnectionPromise;
   user: (where: UserWhereUniqueInput) => UserNullablePromise;
   users: (args?: {
     where?: UserWhereInput;
@@ -63,6 +83,22 @@ export interface Prisma {
    * Mutations
    */
 
+  createOtp: (data: OtpCreateInput) => OtpPromise;
+  updateOtp: (args: {
+    data: OtpUpdateInput;
+    where: OtpWhereUniqueInput;
+  }) => OtpPromise;
+  updateManyOtps: (args: {
+    data: OtpUpdateManyMutationInput;
+    where?: OtpWhereInput;
+  }) => BatchPayloadPromise;
+  upsertOtp: (args: {
+    where: OtpWhereUniqueInput;
+    create: OtpCreateInput;
+    update: OtpUpdateInput;
+  }) => OtpPromise;
+  deleteOtp: (where: OtpWhereUniqueInput) => OtpPromise;
+  deleteManyOtps: (where?: OtpWhereInput) => BatchPayloadPromise;
   createUser: (data: UserCreateInput) => UserPromise;
   updateUser: (args: {
     data: UserUpdateInput;
@@ -88,6 +124,9 @@ export interface Prisma {
 }
 
 export interface Subscription {
+  otp: (
+    where?: OtpSubscriptionWhereInput
+  ) => OtpSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -101,20 +140,98 @@ export interface ClientConstructor<T> {
  * Types
  */
 
+export type OtpOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "otp_ASC"
+  | "otp_DESC"
+  | "expires_at_ASC"
+  | "expires_at_DESC"
+  | "is_verified_ASC"
+  | "is_verified_DESC"
+  | "userId_ASC"
+  | "userId_DESC";
+
 export type UserOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "email_ASC"
   | "email_DESC"
   | "password_ASC"
-  | "password_DESC";
+  | "password_DESC"
+  | "token_ASC"
+  | "token_DESC"
+  | "isVerified_ASC"
+  | "isVerified_DESC"
+  | "resetToken_ASC"
+  | "resetToken_DESC"
+  | "resetTokenExpires_ASC"
+  | "resetTokenExpires_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export type UserWhereUniqueInput = AtLeastOne<{
+export type OtpWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
-  email?: Maybe<String>;
 }>;
+
+export interface OtpWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  otp?: Maybe<String>;
+  otp_not?: Maybe<String>;
+  otp_in?: Maybe<String[] | String>;
+  otp_not_in?: Maybe<String[] | String>;
+  otp_lt?: Maybe<String>;
+  otp_lte?: Maybe<String>;
+  otp_gt?: Maybe<String>;
+  otp_gte?: Maybe<String>;
+  otp_contains?: Maybe<String>;
+  otp_not_contains?: Maybe<String>;
+  otp_starts_with?: Maybe<String>;
+  otp_not_starts_with?: Maybe<String>;
+  otp_ends_with?: Maybe<String>;
+  otp_not_ends_with?: Maybe<String>;
+  expires_at?: Maybe<DateTimeInput>;
+  expires_at_not?: Maybe<DateTimeInput>;
+  expires_at_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  expires_at_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  expires_at_lt?: Maybe<DateTimeInput>;
+  expires_at_lte?: Maybe<DateTimeInput>;
+  expires_at_gt?: Maybe<DateTimeInput>;
+  expires_at_gte?: Maybe<DateTimeInput>;
+  is_verified?: Maybe<Boolean>;
+  is_verified_not?: Maybe<Boolean>;
+  user?: Maybe<UserWhereInput>;
+  userId?: Maybe<String>;
+  userId_not?: Maybe<String>;
+  userId_in?: Maybe<String[] | String>;
+  userId_not_in?: Maybe<String[] | String>;
+  userId_lt?: Maybe<String>;
+  userId_lte?: Maybe<String>;
+  userId_gt?: Maybe<String>;
+  userId_gte?: Maybe<String>;
+  userId_contains?: Maybe<String>;
+  userId_not_contains?: Maybe<String>;
+  userId_starts_with?: Maybe<String>;
+  userId_not_starts_with?: Maybe<String>;
+  userId_ends_with?: Maybe<String>;
+  userId_not_ends_with?: Maybe<String>;
+  AND?: Maybe<OtpWhereInput[] | OtpWhereInput>;
+  OR?: Maybe<OtpWhereInput[] | OtpWhereInput>;
+  NOT?: Maybe<OtpWhereInput[] | OtpWhereInput>;
+}
 
 export interface UserWhereInput {
   id?: Maybe<ID_Input>;
@@ -159,24 +276,275 @@ export interface UserWhereInput {
   password_not_starts_with?: Maybe<String>;
   password_ends_with?: Maybe<String>;
   password_not_ends_with?: Maybe<String>;
+  token?: Maybe<String>;
+  token_not?: Maybe<String>;
+  token_in?: Maybe<String[] | String>;
+  token_not_in?: Maybe<String[] | String>;
+  token_lt?: Maybe<String>;
+  token_lte?: Maybe<String>;
+  token_gt?: Maybe<String>;
+  token_gte?: Maybe<String>;
+  token_contains?: Maybe<String>;
+  token_not_contains?: Maybe<String>;
+  token_starts_with?: Maybe<String>;
+  token_not_starts_with?: Maybe<String>;
+  token_ends_with?: Maybe<String>;
+  token_not_ends_with?: Maybe<String>;
+  isVerified?: Maybe<Boolean>;
+  isVerified_not?: Maybe<Boolean>;
+  otps_every?: Maybe<OtpWhereInput>;
+  otps_some?: Maybe<OtpWhereInput>;
+  otps_none?: Maybe<OtpWhereInput>;
+  resetToken?: Maybe<String>;
+  resetToken_not?: Maybe<String>;
+  resetToken_in?: Maybe<String[] | String>;
+  resetToken_not_in?: Maybe<String[] | String>;
+  resetToken_lt?: Maybe<String>;
+  resetToken_lte?: Maybe<String>;
+  resetToken_gt?: Maybe<String>;
+  resetToken_gte?: Maybe<String>;
+  resetToken_contains?: Maybe<String>;
+  resetToken_not_contains?: Maybe<String>;
+  resetToken_starts_with?: Maybe<String>;
+  resetToken_not_starts_with?: Maybe<String>;
+  resetToken_ends_with?: Maybe<String>;
+  resetToken_not_ends_with?: Maybe<String>;
+  resetTokenExpires?: Maybe<DateTimeInput>;
+  resetTokenExpires_not?: Maybe<DateTimeInput>;
+  resetTokenExpires_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  resetTokenExpires_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  resetTokenExpires_lt?: Maybe<DateTimeInput>;
+  resetTokenExpires_lte?: Maybe<DateTimeInput>;
+  resetTokenExpires_gt?: Maybe<DateTimeInput>;
+  resetTokenExpires_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<UserWhereInput[] | UserWhereInput>;
   OR?: Maybe<UserWhereInput[] | UserWhereInput>;
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  email?: Maybe<String>;
+}>;
+
+export interface OtpCreateInput {
+  otp?: Maybe<String>;
+  expires_at?: Maybe<DateTimeInput>;
+  is_verified?: Maybe<Boolean>;
+  user?: Maybe<UserCreateOneWithoutOtpsInput>;
+  userId?: Maybe<String>;
+}
+
+export interface UserCreateOneWithoutOtpsInput {
+  create?: Maybe<UserCreateWithoutOtpsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateWithoutOtpsInput {
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  token?: Maybe<String>;
+  isVerified?: Maybe<Boolean>;
+  resetToken?: Maybe<String>;
+  resetTokenExpires?: Maybe<DateTimeInput>;
+}
+
+export interface OtpUpdateInput {
+  otp?: Maybe<String>;
+  expires_at?: Maybe<DateTimeInput>;
+  is_verified?: Maybe<Boolean>;
+  user?: Maybe<UserUpdateOneWithoutOtpsInput>;
+  userId?: Maybe<String>;
+}
+
+export interface UserUpdateOneWithoutOtpsInput {
+  create?: Maybe<UserCreateWithoutOtpsInput>;
+  update?: Maybe<UserUpdateWithoutOtpsDataInput>;
+  upsert?: Maybe<UserUpsertWithoutOtpsInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserUpdateWithoutOtpsDataInput {
+  email?: Maybe<String>;
+  password?: Maybe<String>;
+  token?: Maybe<String>;
+  isVerified?: Maybe<Boolean>;
+  resetToken?: Maybe<String>;
+  resetTokenExpires?: Maybe<DateTimeInput>;
+}
+
+export interface UserUpsertWithoutOtpsInput {
+  update: UserUpdateWithoutOtpsDataInput;
+  create: UserCreateWithoutOtpsInput;
+}
+
+export interface OtpUpdateManyMutationInput {
+  otp?: Maybe<String>;
+  expires_at?: Maybe<DateTimeInput>;
+  is_verified?: Maybe<Boolean>;
+  userId?: Maybe<String>;
+}
+
 export interface UserCreateInput {
   email?: Maybe<String>;
-  password: String;
+  password?: Maybe<String>;
+  token?: Maybe<String>;
+  isVerified?: Maybe<Boolean>;
+  otps?: Maybe<OtpCreateManyWithoutUserInput>;
+  resetToken?: Maybe<String>;
+  resetTokenExpires?: Maybe<DateTimeInput>;
+}
+
+export interface OtpCreateManyWithoutUserInput {
+  create?: Maybe<OtpCreateWithoutUserInput[] | OtpCreateWithoutUserInput>;
+  connect?: Maybe<OtpWhereUniqueInput[] | OtpWhereUniqueInput>;
+}
+
+export interface OtpCreateWithoutUserInput {
+  otp?: Maybe<String>;
+  expires_at?: Maybe<DateTimeInput>;
+  is_verified?: Maybe<Boolean>;
+  userId?: Maybe<String>;
 }
 
 export interface UserUpdateInput {
   email?: Maybe<String>;
   password?: Maybe<String>;
+  token?: Maybe<String>;
+  isVerified?: Maybe<Boolean>;
+  otps?: Maybe<OtpUpdateManyWithoutUserInput>;
+  resetToken?: Maybe<String>;
+  resetTokenExpires?: Maybe<DateTimeInput>;
+}
+
+export interface OtpUpdateManyWithoutUserInput {
+  create?: Maybe<OtpCreateWithoutUserInput[] | OtpCreateWithoutUserInput>;
+  delete?: Maybe<OtpWhereUniqueInput[] | OtpWhereUniqueInput>;
+  connect?: Maybe<OtpWhereUniqueInput[] | OtpWhereUniqueInput>;
+  set?: Maybe<OtpWhereUniqueInput[] | OtpWhereUniqueInput>;
+  disconnect?: Maybe<OtpWhereUniqueInput[] | OtpWhereUniqueInput>;
+  update?: Maybe<
+    | OtpUpdateWithWhereUniqueWithoutUserInput[]
+    | OtpUpdateWithWhereUniqueWithoutUserInput
+  >;
+  upsert?: Maybe<
+    | OtpUpsertWithWhereUniqueWithoutUserInput[]
+    | OtpUpsertWithWhereUniqueWithoutUserInput
+  >;
+  deleteMany?: Maybe<OtpScalarWhereInput[] | OtpScalarWhereInput>;
+  updateMany?: Maybe<
+    OtpUpdateManyWithWhereNestedInput[] | OtpUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface OtpUpdateWithWhereUniqueWithoutUserInput {
+  where: OtpWhereUniqueInput;
+  data: OtpUpdateWithoutUserDataInput;
+}
+
+export interface OtpUpdateWithoutUserDataInput {
+  otp?: Maybe<String>;
+  expires_at?: Maybe<DateTimeInput>;
+  is_verified?: Maybe<Boolean>;
+  userId?: Maybe<String>;
+}
+
+export interface OtpUpsertWithWhereUniqueWithoutUserInput {
+  where: OtpWhereUniqueInput;
+  update: OtpUpdateWithoutUserDataInput;
+  create: OtpCreateWithoutUserInput;
+}
+
+export interface OtpScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  otp?: Maybe<String>;
+  otp_not?: Maybe<String>;
+  otp_in?: Maybe<String[] | String>;
+  otp_not_in?: Maybe<String[] | String>;
+  otp_lt?: Maybe<String>;
+  otp_lte?: Maybe<String>;
+  otp_gt?: Maybe<String>;
+  otp_gte?: Maybe<String>;
+  otp_contains?: Maybe<String>;
+  otp_not_contains?: Maybe<String>;
+  otp_starts_with?: Maybe<String>;
+  otp_not_starts_with?: Maybe<String>;
+  otp_ends_with?: Maybe<String>;
+  otp_not_ends_with?: Maybe<String>;
+  expires_at?: Maybe<DateTimeInput>;
+  expires_at_not?: Maybe<DateTimeInput>;
+  expires_at_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  expires_at_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  expires_at_lt?: Maybe<DateTimeInput>;
+  expires_at_lte?: Maybe<DateTimeInput>;
+  expires_at_gt?: Maybe<DateTimeInput>;
+  expires_at_gte?: Maybe<DateTimeInput>;
+  is_verified?: Maybe<Boolean>;
+  is_verified_not?: Maybe<Boolean>;
+  userId?: Maybe<String>;
+  userId_not?: Maybe<String>;
+  userId_in?: Maybe<String[] | String>;
+  userId_not_in?: Maybe<String[] | String>;
+  userId_lt?: Maybe<String>;
+  userId_lte?: Maybe<String>;
+  userId_gt?: Maybe<String>;
+  userId_gte?: Maybe<String>;
+  userId_contains?: Maybe<String>;
+  userId_not_contains?: Maybe<String>;
+  userId_starts_with?: Maybe<String>;
+  userId_not_starts_with?: Maybe<String>;
+  userId_ends_with?: Maybe<String>;
+  userId_not_ends_with?: Maybe<String>;
+  AND?: Maybe<OtpScalarWhereInput[] | OtpScalarWhereInput>;
+  OR?: Maybe<OtpScalarWhereInput[] | OtpScalarWhereInput>;
+  NOT?: Maybe<OtpScalarWhereInput[] | OtpScalarWhereInput>;
+}
+
+export interface OtpUpdateManyWithWhereNestedInput {
+  where: OtpScalarWhereInput;
+  data: OtpUpdateManyDataInput;
+}
+
+export interface OtpUpdateManyDataInput {
+  otp?: Maybe<String>;
+  expires_at?: Maybe<DateTimeInput>;
+  is_verified?: Maybe<Boolean>;
+  userId?: Maybe<String>;
 }
 
 export interface UserUpdateManyMutationInput {
   email?: Maybe<String>;
   password?: Maybe<String>;
+  token?: Maybe<String>;
+  isVerified?: Maybe<Boolean>;
+  resetToken?: Maybe<String>;
+  resetTokenExpires?: Maybe<DateTimeInput>;
+}
+
+export interface OtpSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<OtpWhereInput>;
+  AND?: Maybe<OtpSubscriptionWhereInput[] | OtpSubscriptionWhereInput>;
+  OR?: Maybe<OtpSubscriptionWhereInput[] | OtpSubscriptionWhereInput>;
+  NOT?: Maybe<OtpSubscriptionWhereInput[] | OtpSubscriptionWhereInput>;
 }
 
 export interface UserSubscriptionWhereInput {
@@ -194,16 +562,70 @@ export interface NodeNode {
   id: ID_Output;
 }
 
+export interface Otp {
+  id: ID_Output;
+  otp?: String;
+  expires_at?: DateTimeOutput;
+  is_verified?: Boolean;
+  userId?: String;
+}
+
+export interface OtpPromise extends Promise<Otp>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  otp: () => Promise<String>;
+  expires_at: () => Promise<DateTimeOutput>;
+  is_verified: () => Promise<Boolean>;
+  user: <T = UserPromise>() => T;
+  userId: () => Promise<String>;
+}
+
+export interface OtpSubscription
+  extends Promise<AsyncIterator<Otp>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  otp: () => Promise<AsyncIterator<String>>;
+  expires_at: () => Promise<AsyncIterator<DateTimeOutput>>;
+  is_verified: () => Promise<AsyncIterator<Boolean>>;
+  user: <T = UserSubscription>() => T;
+  userId: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OtpNullablePromise extends Promise<Otp | null>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  otp: () => Promise<String>;
+  expires_at: () => Promise<DateTimeOutput>;
+  is_verified: () => Promise<Boolean>;
+  user: <T = UserPromise>() => T;
+  userId: () => Promise<String>;
+}
+
 export interface User {
   id: ID_Output;
   email?: String;
-  password: String;
+  password?: String;
+  token?: String;
+  isVerified?: Boolean;
+  resetToken?: String;
+  resetTokenExpires?: DateTimeOutput;
 }
 
 export interface UserPromise extends Promise<User>, Fragmentable {
   id: () => Promise<ID_Output>;
   email: () => Promise<String>;
   password: () => Promise<String>;
+  token: () => Promise<String>;
+  isVerified: () => Promise<Boolean>;
+  otps: <T = FragmentableArray<Otp>>(args?: {
+    where?: OtpWhereInput;
+    orderBy?: OtpOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  resetToken: () => Promise<String>;
+  resetTokenExpires: () => Promise<DateTimeOutput>;
 }
 
 export interface UserSubscription
@@ -212,6 +634,19 @@ export interface UserSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   email: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
+  token: () => Promise<AsyncIterator<String>>;
+  isVerified: () => Promise<AsyncIterator<Boolean>>;
+  otps: <T = Promise<AsyncIterator<OtpSubscription>>>(args?: {
+    where?: OtpWhereInput;
+    orderBy?: OtpOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  resetToken: () => Promise<AsyncIterator<String>>;
+  resetTokenExpires: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface UserNullablePromise
@@ -220,27 +655,40 @@ export interface UserNullablePromise
   id: () => Promise<ID_Output>;
   email: () => Promise<String>;
   password: () => Promise<String>;
+  token: () => Promise<String>;
+  isVerified: () => Promise<Boolean>;
+  otps: <T = FragmentableArray<Otp>>(args?: {
+    where?: OtpWhereInput;
+    orderBy?: OtpOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  resetToken: () => Promise<String>;
+  resetTokenExpires: () => Promise<DateTimeOutput>;
 }
 
-export interface UserConnection {
+export interface OtpConnection {
   pageInfo: PageInfo;
-  edges: UserEdge[];
+  edges: OtpEdge[];
 }
 
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
+export interface OtpConnectionPromise
+  extends Promise<OtpConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
+  edges: <T = FragmentableArray<OtpEdge>>() => T;
+  aggregate: <T = AggregateOtpPromise>() => T;
 }
 
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
+export interface OtpConnectionSubscription
+  extends Promise<AsyncIterator<OtpConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<OtpEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateOtpSubscription>() => T;
 }
 
 export interface PageInfo {
@@ -264,6 +712,60 @@ export interface PageInfoSubscription
   hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
   startCursor: () => Promise<AsyncIterator<String>>;
   endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OtpEdge {
+  node: Otp;
+  cursor: String;
+}
+
+export interface OtpEdgePromise extends Promise<OtpEdge>, Fragmentable {
+  node: <T = OtpPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OtpEdgeSubscription
+  extends Promise<AsyncIterator<OtpEdge>>,
+    Fragmentable {
+  node: <T = OtpSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateOtp {
+  count: Int;
+}
+
+export interface AggregateOtpPromise
+  extends Promise<AggregateOtp>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOtpSubscription
+  extends Promise<AsyncIterator<AggregateOtp>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
+}
+
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
+}
+
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
 }
 
 export interface UserEdge {
@@ -315,6 +817,59 @@ export interface BatchPayloadSubscription
   count: () => Promise<AsyncIterator<Long>>;
 }
 
+export interface OtpSubscriptionPayload {
+  mutation: MutationType;
+  node: Otp;
+  updatedFields: String[];
+  previousValues: OtpPreviousValues;
+}
+
+export interface OtpSubscriptionPayloadPromise
+  extends Promise<OtpSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = OtpPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = OtpPreviousValuesPromise>() => T;
+}
+
+export interface OtpSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<OtpSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = OtpSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = OtpPreviousValuesSubscription>() => T;
+}
+
+export interface OtpPreviousValues {
+  id: ID_Output;
+  otp?: String;
+  expires_at?: DateTimeOutput;
+  is_verified?: Boolean;
+  userId?: String;
+}
+
+export interface OtpPreviousValuesPromise
+  extends Promise<OtpPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  otp: () => Promise<String>;
+  expires_at: () => Promise<DateTimeOutput>;
+  is_verified: () => Promise<Boolean>;
+  userId: () => Promise<String>;
+}
+
+export interface OtpPreviousValuesSubscription
+  extends Promise<AsyncIterator<OtpPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  otp: () => Promise<AsyncIterator<String>>;
+  expires_at: () => Promise<AsyncIterator<DateTimeOutput>>;
+  is_verified: () => Promise<AsyncIterator<Boolean>>;
+  userId: () => Promise<AsyncIterator<String>>;
+}
+
 export interface UserSubscriptionPayload {
   mutation: MutationType;
   node: User;
@@ -343,7 +898,11 @@ export interface UserSubscriptionPayloadSubscription
 export interface UserPreviousValues {
   id: ID_Output;
   email?: String;
-  password: String;
+  password?: String;
+  token?: String;
+  isVerified?: Boolean;
+  resetToken?: String;
+  resetTokenExpires?: DateTimeOutput;
 }
 
 export interface UserPreviousValuesPromise
@@ -352,6 +911,10 @@ export interface UserPreviousValuesPromise
   id: () => Promise<ID_Output>;
   email: () => Promise<String>;
   password: () => Promise<String>;
+  token: () => Promise<String>;
+  isVerified: () => Promise<Boolean>;
+  resetToken: () => Promise<String>;
+  resetTokenExpires: () => Promise<DateTimeOutput>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -360,6 +923,10 @@ export interface UserPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   email: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
+  token: () => Promise<AsyncIterator<String>>;
+  isVerified: () => Promise<AsyncIterator<Boolean>>;
+  resetToken: () => Promise<AsyncIterator<String>>;
+  resetTokenExpires: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 /*
@@ -374,14 +941,24 @@ The `String` scalar type represents textual data, represented as UTF-8 character
 export type String = string;
 
 /*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+DateTime scalar input type, allowing Date
 */
-export type Int = number;
+export type DateTimeInput = Date | string;
+
+/*
+DateTime scalar output type, which is always a string
+*/
+export type DateTimeOutput = string;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.
 */
 export type Boolean = boolean;
+
+/*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+*/
+export type Int = number;
 
 export type Long = string;
 
@@ -392,6 +969,10 @@ export type Long = string;
 export const models: Model[] = [
   {
     name: "User",
+    embedded: false
+  },
+  {
+    name: "Otp",
     embedded: false
   }
 ];
