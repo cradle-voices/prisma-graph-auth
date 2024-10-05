@@ -1,12 +1,20 @@
 const bcrypt = require("bcryptjs")
 const jwt    = require("jsonwebtoken")
+const validator = require("validator");
 
 const resolvers = {
   Mutation: {
     register: async (parent, {password, email}, ctx, info) => {
-      // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      // validate the email address given 
+      if (!validator.isEmail(email)) {
+        throw new Error("Invalid email format.");
+      }
+      //validate the password 
+      if (!validator.isStrongPassword(password, { minLength: 8, minNumbers: 1, minSymbols: 1 })) {
+        throw new Error("Password must be at least 8 characters long, and include numbers and special characters.");
+      }
       const user = await ctx.prisma.createUser({
         password: hashedPassword,
         email,
@@ -15,25 +23,18 @@ const resolvers = {
       return user;
     },
 
-    // handle the login processes 
+
     // handle the login processes 
     login: async (parent, { email, password }, ctx) => {
       try {
-        console.log("Email received for login:", email);
-    
-        // Correct query structure for Prisma 1
         const user = await ctx.prisma.user({ email });
-        // Log the Prisma response for debugging
-        console.log("User fetched from Prisma:", user);
     
         if (!user) {
-          console.error("User not found with this email:", email);
           throw new Error("INVALID EMAIL ADDRESS OR PASSWORD");
         }
     
         const matchPassword = await bcrypt.compare(password, user.password);
         if (!matchPassword) {
-          console.error("Password mismatch for user:", user);
           throw new Error("INVALID EMAIL ADDRESS OR PASSWORD");
         }
     
@@ -43,17 +44,14 @@ const resolvers = {
             id: user.id,
             email: user.email,
           },
-          process.env.PRISMA_SECRET, // Make sure this env variable is defined
+          process.env.PRISMA_SECRET, // used in env variables instead of env file 
           { expiresIn: "30d" }
         );
     
         // Log token generation success
-        console.log("Token generated for user:", user.email);
     
         return { token, user };
       } catch (error) {
-        // Catch and log any errors
-        console.error("Error during login process:", error);
         throw new Error(error.message);
       }
     },
