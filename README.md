@@ -11,7 +11,9 @@ This repository provides a starting point to work with apollo-server and prisma
 4. Deploy the datamodel using `prisma deploy`
 5. Start the server using `npm run dev`
 
-## Project Structure
+## Directory Structure
+
+```bash
 ├── __tests__               # Test files
 │   ├── crud.test.js        # Unit tests for CRUD operations
 │   └── tokenUtils.test.js  # Unit tests for token utilities
@@ -30,4 +32,8 @@ This repository provides a starting point to work with apollo-server and prisma
 │   │   │   └── prisma-schema.js  # Prisma schema file
 │   └── utils               # Utility functions
 │       └── emailUtils.js   # Email utility functions
+
+
+```
+
 
