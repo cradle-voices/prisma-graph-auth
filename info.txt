@@ -1,0 +1,47 @@
+
+
+
+//   describe('Verify OTP', () => {
+//     it('should verify the OTP for a registered user', async () => {
+//       // Register a user and generate an OTP first
+//       const registerRes = await sendGraphQLRequest(`
+//         mutation {
+//           register(password: "khhh##4QQWWFF123", email: "otpverify@example.com") {
+//             success
+//             message
+//           }
+//         }
+//       `);
+
+//       // Use the OTP generated during registration
+//       const otp = registerRes.body.data.register.message.split("OTP: ")[1];
+
+//       const res = await sendGraphQLRequest(`
+//         mutation {
+//           verifyOtp(email: "otpverify@example.com", otp: "${otp}") {
+//             success
+//             message
+//           }
+//         }
+//       `);
+
+//       expect(res.statusCode).toBe(200);
+//       expect(res.body.data.verifyOtp.success).toBe(true);
+//       expect(res.body.data.verifyOtp.message).toBe("OTP verified successfully.");
+//     });
+
+//     it('should fail to verify an incorrect OTP', async () => {
+//       const res = await sendGraphQLRequest(`
+//         mutation {
+//           verifyOtp(email: "otpverify@example.com", otp: "wrong-otp") {
+//             success
+//             message
+//           }
+//         }
+//       `);
+
+//       expect(res.statusCode).toBe(200);
+//       expect(res.body.data.verifyOtp.success).toBe(false);
+//       expect(res.body.data.verifyOtp.message).toBe("Invalid OTP.");
+//     });
+//   });
