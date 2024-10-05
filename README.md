@@ -242,3 +242,8 @@ mutation {
 
 ```
 
+# Challanges 
+
+While building the project i had some difficulty integratin mail for the OTP and reset, tried gpt and other online open source sources but could not be able to fully integrate it
+
+THANK YOU FOR THE OPPORTUNITY ONCE MORE TO SHOWCASE MY UNDERSTANDING OF THE SUBJECT
