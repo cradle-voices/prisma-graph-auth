@@ -242,6 +242,16 @@ mutation {
 
 ```
 
+
+
+### Run test
+```bash
+npm test
+
+```
+
+
+
 # Challanges 
 
 While building the project i had some difficulty integratin mail for the OTP and reset, tried gpt and other online open source sources but could not be able to fully integrate it
