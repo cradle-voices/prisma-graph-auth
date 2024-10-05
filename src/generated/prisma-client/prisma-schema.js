@@ -3,7 +3,11 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateUser {
+/* GraphQL */ `type AggregateOtp {
+  count: Int!
+}
+
+type AggregateUser {
   count: Int!
 }
 
@@ -11,9 +15,17 @@ type BatchPayload {
   count: Long!
 }
 
+scalar DateTime
+
 scalar Long
 
 type Mutation {
+  createOtp(data: OtpCreateInput!): Otp!
+  updateOtp(data: OtpUpdateInput!, where: OtpWhereUniqueInput!): Otp
+  updateManyOtps(data: OtpUpdateManyMutationInput!, where: OtpWhereInput): BatchPayload!
+  upsertOtp(where: OtpWhereUniqueInput!, create: OtpCreateInput!, update: OtpUpdateInput!): Otp!
+  deleteOtp(where: OtpWhereUniqueInput!): Otp
+  deleteManyOtps(where: OtpWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -32,6 +44,263 @@ interface Node {
   id: ID!
 }
 
+type Otp {
+  id: ID!
+  otp: String
+  expires_at: DateTime
+  is_verified: Boolean
+  user: User
+  userId: String
+}
+
+type OtpConnection {
+  pageInfo: PageInfo!
+  edges: [OtpEdge]!
+  aggregate: AggregateOtp!
+}
+
+input OtpCreateInput {
+  otp: String
+  expires_at: DateTime
+  is_verified: Boolean
+  user: UserCreateOneWithoutOtpsInput
+  userId: String
+}
+
+input OtpCreateManyWithoutUserInput {
+  create: [OtpCreateWithoutUserInput!]
+  connect: [OtpWhereUniqueInput!]
+}
+
+input OtpCreateWithoutUserInput {
+  otp: String
+  expires_at: DateTime
+  is_verified: Boolean
+  userId: String
+}
+
+type OtpEdge {
+  node: Otp!
+  cursor: String!
+}
+
+enum OtpOrderByInput {
+  id_ASC
+  id_DESC
+  otp_ASC
+  otp_DESC
+  expires_at_ASC
+  expires_at_DESC
+  is_verified_ASC
+  is_verified_DESC
+  userId_ASC
+  userId_DESC
+}
+
+type OtpPreviousValues {
+  id: ID!
+  otp: String
+  expires_at: DateTime
+  is_verified: Boolean
+  userId: String
+}
+
+input OtpScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  otp: String
+  otp_not: String
+  otp_in: [String!]
+  otp_not_in: [String!]
+  otp_lt: String
+  otp_lte: String
+  otp_gt: String
+  otp_gte: String
+  otp_contains: String
+  otp_not_contains: String
+  otp_starts_with: String
+  otp_not_starts_with: String
+  otp_ends_with: String
+  otp_not_ends_with: String
+  expires_at: DateTime
+  expires_at_not: DateTime
+  expires_at_in: [DateTime!]
+  expires_at_not_in: [DateTime!]
+  expires_at_lt: DateTime
+  expires_at_lte: DateTime
+  expires_at_gt: DateTime
+  expires_at_gte: DateTime
+  is_verified: Boolean
+  is_verified_not: Boolean
+  userId: String
+  userId_not: String
+  userId_in: [String!]
+  userId_not_in: [String!]
+  userId_lt: String
+  userId_lte: String
+  userId_gt: String
+  userId_gte: String
+  userId_contains: String
+  userId_not_contains: String
+  userId_starts_with: String
+  userId_not_starts_with: String
+  userId_ends_with: String
+  userId_not_ends_with: String
+  AND: [OtpScalarWhereInput!]
+  OR: [OtpScalarWhereInput!]
+  NOT: [OtpScalarWhereInput!]
+}
+
+type OtpSubscriptionPayload {
+  mutation: MutationType!
+  node: Otp
+  updatedFields: [String!]
+  previousValues: OtpPreviousValues
+}
+
+input OtpSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: OtpWhereInput
+  AND: [OtpSubscriptionWhereInput!]
+  OR: [OtpSubscriptionWhereInput!]
+  NOT: [OtpSubscriptionWhereInput!]
+}
+
+input OtpUpdateInput {
+  otp: String
+  expires_at: DateTime
+  is_verified: Boolean
+  user: UserUpdateOneWithoutOtpsInput
+  userId: String
+}
+
+input OtpUpdateManyDataInput {
+  otp: String
+  expires_at: DateTime
+  is_verified: Boolean
+  userId: String
+}
+
+input OtpUpdateManyMutationInput {
+  otp: String
+  expires_at: DateTime
+  is_verified: Boolean
+  userId: String
+}
+
+input OtpUpdateManyWithoutUserInput {
+  create: [OtpCreateWithoutUserInput!]
+  delete: [OtpWhereUniqueInput!]
+  connect: [OtpWhereUniqueInput!]
+  set: [OtpWhereUniqueInput!]
+  disconnect: [OtpWhereUniqueInput!]
+  update: [OtpUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [OtpUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [OtpScalarWhereInput!]
+  updateMany: [OtpUpdateManyWithWhereNestedInput!]
+}
+
+input OtpUpdateManyWithWhereNestedInput {
+  where: OtpScalarWhereInput!
+  data: OtpUpdateManyDataInput!
+}
+
+input OtpUpdateWithoutUserDataInput {
+  otp: String
+  expires_at: DateTime
+  is_verified: Boolean
+  userId: String
+}
+
+input OtpUpdateWithWhereUniqueWithoutUserInput {
+  where: OtpWhereUniqueInput!
+  data: OtpUpdateWithoutUserDataInput!
+}
+
+input OtpUpsertWithWhereUniqueWithoutUserInput {
+  where: OtpWhereUniqueInput!
+  update: OtpUpdateWithoutUserDataInput!
+  create: OtpCreateWithoutUserInput!
+}
+
+input OtpWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  otp: String
+  otp_not: String
+  otp_in: [String!]
+  otp_not_in: [String!]
+  otp_lt: String
+  otp_lte: String
+  otp_gt: String
+  otp_gte: String
+  otp_contains: String
+  otp_not_contains: String
+  otp_starts_with: String
+  otp_not_starts_with: String
+  otp_ends_with: String
+  otp_not_ends_with: String
+  expires_at: DateTime
+  expires_at_not: DateTime
+  expires_at_in: [DateTime!]
+  expires_at_not_in: [DateTime!]
+  expires_at_lt: DateTime
+  expires_at_lte: DateTime
+  expires_at_gt: DateTime
+  expires_at_gte: DateTime
+  is_verified: Boolean
+  is_verified_not: Boolean
+  user: UserWhereInput
+  userId: String
+  userId_not: String
+  userId_in: [String!]
+  userId_not_in: [String!]
+  userId_lt: String
+  userId_lte: String
+  userId_gt: String
+  userId_gte: String
+  userId_contains: String
+  userId_not_contains: String
+  userId_starts_with: String
+  userId_not_starts_with: String
+  userId_ends_with: String
+  userId_not_ends_with: String
+  AND: [OtpWhereInput!]
+  OR: [OtpWhereInput!]
+  NOT: [OtpWhereInput!]
+}
+
+input OtpWhereUniqueInput {
+  id: ID
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -40,6 +309,9 @@ type PageInfo {
 }
 
 type Query {
+  otp(where: OtpWhereUniqueInput!): Otp
+  otps(where: OtpWhereInput, orderBy: OtpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Otp]!
+  otpsConnection(where: OtpWhereInput, orderBy: OtpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OtpConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -47,13 +319,19 @@ type Query {
 }
 
 type Subscription {
+  otp(where: OtpSubscriptionWhereInput): OtpSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
 type User {
   id: ID!
   email: String
-  password: String!
+  password: String
+  token: String
+  isVerified: Boolean
+  otps(where: OtpWhereInput, orderBy: OtpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Otp!]
+  resetToken: String
+  resetTokenExpires: DateTime
 }
 
 type UserConnection {
@@ -64,7 +342,26 @@ type UserConnection {
 
 input UserCreateInput {
   email: String
-  password: String!
+  password: String
+  token: String
+  isVerified: Boolean
+  otps: OtpCreateManyWithoutUserInput
+  resetToken: String
+  resetTokenExpires: DateTime
+}
+
+input UserCreateOneWithoutOtpsInput {
+  create: UserCreateWithoutOtpsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutOtpsInput {
+  email: String
+  password: String
+  token: String
+  isVerified: Boolean
+  resetToken: String
+  resetTokenExpires: DateTime
 }
 
 type UserEdge {
@@ -79,12 +376,24 @@ enum UserOrderByInput {
   email_DESC
   password_ASC
   password_DESC
+  token_ASC
+  token_DESC
+  isVerified_ASC
+  isVerified_DESC
+  resetToken_ASC
+  resetToken_DESC
+  resetTokenExpires_ASC
+  resetTokenExpires_DESC
 }
 
 type UserPreviousValues {
   id: ID!
   email: String
-  password: String!
+  password: String
+  token: String
+  isVerified: Boolean
+  resetToken: String
+  resetTokenExpires: DateTime
 }
 
 type UserSubscriptionPayload {
@@ -108,11 +417,43 @@ input UserSubscriptionWhereInput {
 input UserUpdateInput {
   email: String
   password: String
+  token: String
+  isVerified: Boolean
+  otps: OtpUpdateManyWithoutUserInput
+  resetToken: String
+  resetTokenExpires: DateTime
 }
 
 input UserUpdateManyMutationInput {
   email: String
   password: String
+  token: String
+  isVerified: Boolean
+  resetToken: String
+  resetTokenExpires: DateTime
+}
+
+input UserUpdateOneWithoutOtpsInput {
+  create: UserCreateWithoutOtpsInput
+  update: UserUpdateWithoutOtpsDataInput
+  upsert: UserUpsertWithoutOtpsInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutOtpsDataInput {
+  email: String
+  password: String
+  token: String
+  isVerified: Boolean
+  resetToken: String
+  resetTokenExpires: DateTime
+}
+
+input UserUpsertWithoutOtpsInput {
+  update: UserUpdateWithoutOtpsDataInput!
+  create: UserCreateWithoutOtpsInput!
 }
 
 input UserWhereInput {
@@ -158,6 +499,47 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
+  token: String
+  token_not: String
+  token_in: [String!]
+  token_not_in: [String!]
+  token_lt: String
+  token_lte: String
+  token_gt: String
+  token_gte: String
+  token_contains: String
+  token_not_contains: String
+  token_starts_with: String
+  token_not_starts_with: String
+  token_ends_with: String
+  token_not_ends_with: String
+  isVerified: Boolean
+  isVerified_not: Boolean
+  otps_every: OtpWhereInput
+  otps_some: OtpWhereInput
+  otps_none: OtpWhereInput
+  resetToken: String
+  resetToken_not: String
+  resetToken_in: [String!]
+  resetToken_not_in: [String!]
+  resetToken_lt: String
+  resetToken_lte: String
+  resetToken_gt: String
+  resetToken_gte: String
+  resetToken_contains: String
+  resetToken_not_contains: String
+  resetToken_starts_with: String
+  resetToken_not_starts_with: String
+  resetToken_ends_with: String
+  resetToken_not_ends_with: String
+  resetTokenExpires: DateTime
+  resetTokenExpires_not: DateTime
+  resetTokenExpires_in: [DateTime!]
+  resetTokenExpires_not_in: [DateTime!]
+  resetTokenExpires_lt: DateTime
+  resetTokenExpires_lte: DateTime
+  resetTokenExpires_gt: DateTime
+  resetTokenExpires_gte: DateTime
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]
