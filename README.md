@@ -1,9 +1,17 @@
 # Mamlaka Hub and Spoke Payment API (v2)
 
-**Author**: Collins Ochieng  
-**Email**: collins@mam-laka.com 
-**Phone**: +254794940160  or 254768899729
-**Base URL**: `https://payments.mam-laka.com`
+**Author**  
+Collins Ochieng  
+
+**Email**  
+collins@mam-laka.com  
+
+**Phone**  
++254794940160  
+254768899729  
+
+**Base URL**  
+`https://payments.mam-laka.com`
 
 ---
 #### Mobile APIs
@@ -58,7 +66,7 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 {
     "message": "Payment initiation successful",
     "secureId": "qdml8553ZeInavKorBHzLA==",
-    "transactionId": 9623
+    "transactionId": "4950-41ad-9820-8559865ca58950703213"
 }
 
 ```
@@ -68,7 +76,7 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 {
   "Body": {
     "stkCallback": {
-      "MerchantRequestID": "6b16-43f4-a9f6-8e81ad29eeab7100721",
+      "MerchantRequestID": "4950-41ad-9820-8559865ca58950703213",
       "CheckoutRequestID": "ws_CO_21012025132712034768899729",
       "ResultCode": 0,
       "ResultDesc": "The service request is processed successfully.",
@@ -112,6 +120,8 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 }
 ```
 
+- **`transactionId`**: This is a unique identifier returned after initiating a payment. Use it to track the transaction status. It will be the same as the **`MerchantRequestID`** provided in the callback. Use this ID to update your records accordingly.
+
 
 ### Money Transfer Alias B2C
 
@@ -137,7 +147,7 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 {
     "message": "Payment initiation successful",
     "secureId": "qdml8553ZeInavKorBHzLA==",
-    "transactionId": 9623
+    "transactionId": "a392-45d1-93c1-58f9447915e717138558"
 }
 
 ```
@@ -149,7 +159,7 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
     "ResultType": 0,
     "ResultCode": 0,
     "ResultDesc": "The service request is processed successfully.",
-    "OriginatorConversationID": "9021-4f51-8691-8604c07e13de14061111",
+    "OriginatorConversationID": "a392-45d1-93c1-58f9447915e717138558",
     "ConversationID": "AG_20250201_206051c643ca6389833f",
     "TransactionID": "TB18E731YO",
     "ResultParameters": {
@@ -198,6 +208,8 @@ curl --location 'https://payments.mam-laka.com/api/v1' \
 }
 
 ```
+
+- **`transactionId`**: This is a unique identifier returned after initiating a payment. Use it to track the transaction status. It will be the same as the **`OriginatorConversationID`** provided in the callback. Use this ID to update your records accordingly.
 
 
 
