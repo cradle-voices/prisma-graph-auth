@@ -1,60 +1,133 @@
-# Prisma Apollo Server Starter
+# Mamlaka Hub and Spoke Payment API (v2)
 
-This repository provides a starting point to work with apollo-server and prisma
+**Author**: Collins Ochieng  
+**Email**: collins@mam-laka.com 
+**Phone**: +254794940160  or 254768899729
+**Base URL**: `https://payments.mam-laka.com`
 
+---
+#### Mobile APIs
 
-## Getting started
+### Step 1: Generate Token
 
-1. Clone this repo
-2. Run `npm install` to grab dependencies from npm.
-3. Start prisma and database instance using `docker-compose up -d` (Run `yarn deploy -n` to use prisma demo servers)
-4. Deploy the datamodel using `prisma deploy`
-5. Start the server using `npm run dev`
+## Authentication
 
-## Directory Structure
+### Step 1: Generate Token
+To perform API operations, you need to first generate a token using the username and password issued during the setup process. The token will be used in the Authorization header for subsequent operations.
 
+#### API Endpoint to Generate Token
+- **URL**: `{{baseUrl}}/api/v1`
+- **Method**: `POST`
+- **Headers**: 
+  - `Authorization: Basic Y29sbHM6Y29tZXRhcHBtYWlu`
+
+#### Example cURL Request:
 ```bash
-├── __tests__               # Test files
-│   ├── crud.test.js        # Unit tests for CRUD operations
-│   └── tokenUtils.test.js  # Unit tests for token utilities
-├── singleton               # Singleton pattern-related files
-│   └── singleton.js        # Singleton pattern implementation
-├── src                     # Source code
-│   ├── .env                # Environment variables
-│   ├── index.js            # Entry point for the application
-│   ├── resolvers.js        # GraphQL resolvers
-│   ├── server.js           # Apollo Server setup
-│   ├── typeDefs.js         # GraphQL schema definitions
-│   ├── generated           # Auto-generated Prisma client code
-│   │   ├── prisma-client
-│   │   │   ├── index.d.ts  # TypeScript definitions for Prisma
-│   │   │   ├── index.js    # Prisma client entry
-│   │   │   └── prisma-schema.js  # Prisma schema file
-│   └── utils               # Utility functions
-│       └── emailUtils.js   # Email utility functions
+curl --location 'https://payments.mam-laka.com/api/v1' \
+--header 'Authorization: Basic Y29sbHM6Y29tZXRhcHBtYWlu'
+
+
 
 
 ```
 ## API-Documentation
 
-### Register
+### Initiate STk push ie C2B
 
-**Endpoint:** `http://localhost:8383/`
+**Endpoint:** `{{BASE_URL}}/api/v1/mobile/initiate`
 
 **Method:** `POST`
 
-**GraphQL Query:**
+```json
+{
+  "impalaMerchantId": "{{username}}",
+  "displayName": "AVIATOR", //name you want appear on the customer when making the payment 
+  "currency": "KES",
+  "amount": 10,
+  "payerPhone": "254768899729", 
+  "mobileMoneySP": "M-Pesa",
+  "externalId": "ImpadlTdest2",
+  "callbackUrl": "https://97e6-217-21-116-242.ngrok-free.app/" 
+}
 
-```graphql
-mutation {
-  register(password: "khhh##4QQWWFF123", email: "sam1@gmail.com") {
-    success
-    message
-    user {
-      id
-      email
+
+```
+# Sample response 
+
+```json
+{
+    "message": "Payment initiation successful",
+    "secureId": "qdml8553ZeInavKorBHzLA==",
+    "transactionId": 9623
+}
+
+```
+# Callback Success  response 
+
+```json
+{
+  "Body": {
+    "stkCallback": {
+      "MerchantRequestID": "6b16-43f4-a9f6-8e81ad29eeab7100721",
+      "CheckoutRequestID": "ws_CO_21012025132712034768899729",
+      "ResultCode": 0,
+      "ResultDesc": "The service request is processed successfully.",
+      "CallbackMetadata": {
+        "Item": [
+          {
+            "Name": "Amount",
+            "Value": 1.00
+          },
+          {
+            "Name": "MpesaReceiptNumber",
+            "Value": "NLJ7RT61SV"
+          },
+          {
+            "Name": "TransactionDate",
+            "Value": 20250121132712
+          },
+          {
+            "Name": "PhoneNumber",
+            "Value": 254768899729
+          }
+        ]
+      }
     }
   }
+}
+
+```
+# Callback Failed Transaction   Response 
+
+```json
+{
+    "Body": {
+      "stkCallback": {
+        "MerchantRequestID": "2697-4453-b07f-ff58b4b1cf417304846",
+        "CheckoutRequestID": "ws_CO_01022025203439198725822504",
+        "ResultCode": 1032,
+        "ResultDesc": "Request cancelled by user"
+      }
+    }
+}
+```
+
+
+### Money Transfer Alias B2C
+
+**Endpoint:** `{{BASE_URL}}/api/v1/mobile/transfer`
+
+**Method:** `POST`
+
+```json
+{
+    "impalaMerchantId":"{{username}}",
+    "currency":"KES",
+    "amount":10,
+    "recipientPhone":"254768899729", 
+    "mobileMoneySP":"M-Pesa",
+    "externalId":"joeltest404",
+    "callbackUrl":"https://97e6-217-21-116-242.ngrok-free.app/"
 }
 
 ```
@@ -62,13 +135,63 @@ mutation {
 
 ```json
 {
-  "data": {
-    "register": {
-      "success": true,
-      "message": "User created successfuly, here is your OTP 705453",
-      "user": {
-        "id": "cm1vz7p5100fr0786gu1dlfsk",
-        "email": "sam1@gmail.com"
+    "message": "Payment initiation successful",
+    "secureId": "qdml8553ZeInavKorBHzLA==",
+    "transactionId": 9623
+}
+
+```
+# Callback Success  response 
+
+```json
+{
+  "Result": {
+    "ResultType": 0,
+    "ResultCode": 0,
+    "ResultDesc": "The service request is processed successfully.",
+    "OriginatorConversationID": "9021-4f51-8691-8604c07e13de14061111",
+    "ConversationID": "AG_20250201_206051c643ca6389833f",
+    "TransactionID": "TB18E731YO",
+    "ResultParameters": {
+      "ResultParameter": [
+        {
+          "Key": "ReceiverPartyPublicName",
+          "Value": "0768899729 - Collins "
+        },
+        {
+          "Key": "TransactionCompletedDateTime",
+          "Value": "01.02.2025 21:28:54"
+        },
+        {
+          "Key": "B2CUtilityAccountAvailableFunds",
+          "Value": 6918.7
+        },
+        {
+          "Key": "B2CWorkingAccountAvailableFunds",
+          "Value": 0
+        },
+        {
+          "Key": "B2CRecipientIsRegisteredCustomer",
+          "Value": "Y"
+        },
+        {
+          "Key": "B2CChargesPaidAccountAvailableFunds",
+          "Value": 0
+        },
+        {
+          "Key": "TransactionAmount",
+          "Value": 10
+        },
+        {
+          "Key": "TransactionReceipt",
+          "Value": "TB18E731YO"
+        }
+      ]
+    },
+    "ReferenceData": {
+      "ReferenceItem": {
+        "Key": "QueueTimeoutURL",
+        "Value": "http://internalapi.safaricom.co.ke/mpesa/b2cresults/v1/submit"
       }
     }
   }
@@ -77,183 +200,6 @@ mutation {
 ```
 
 
-### veryfy OTP
-
-**Endpoint:** `http://localhost:8383/`
-
-**Method:** `POST`
-
-**GraphQL Query:**
-
-```graphql
-mutation {
-  verifyOtp(email: "sam1@gmail.com", otp: "705453") {
-    success
-    message
-  }
-}
-
-
-```
-# Sample response 
-
-```json
-{
-  "data": {
-    "verifyOtp": {
-      "success": true,
-      "message": "OTP verified successfully."
-    }
-  }
-}
-
-```
 
 
 
-
-### Login
-
-**Endpoint:** `http://localhost:8383/`
-
-**Method:** `POST`
-
-**GraphQL Query:**
-
-```graphql
-mutation {
-  login(password: "khhh##4QQWWFF123", email: "sam1@gmail.com") {
-    success
-    message
-    token
-    user {
-      id
-      email
-    }
-  }
-}
-
-
-```
-# Sample success response 
-
-```json
-{
-  "data": {
-    "login": {
-      "success": true,
-      "message": "Login successful.",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtMXZ6N3A1MTAwZnIwNzg2Z3UxZGxmc2siLCJlbWFpbCI6InNhbTFAZ21haWwuY29tIiwiaWF0IjoxNzI4MTIyMDM3LCJleHAiOjE3MzA3MTQwMzd9.iwjqc7-OoUtUHZNTZAO4-fj_8bzqj5Y8_YaxAxsRGkc",
-      "user": {
-        "id": "cm1vz7p5100fr0786gu1dlfsk",
-        "email": "sam1@gmail.com"
-      }
-    }
-  }
-}
-
-```
-
-# Sample Failed  response 
-
-```json
-{
-  "data": {
-    "login": {
-      "success": false,
-      "message": "Invalid email address or password.",
-      "token": null,
-      "user": null
-    }
-  }
-}
-```
-
-
-
-### Request password reset
-
-**Endpoint:** `http://localhost:8383/`
-
-**Method:** `POST`
-
-**GraphQL Query:**
-
-```graphql
-mutation {
-  requestPasswordReset(email: "sam1@gmail.com"){
-    message
-    success
-  }
-}
-
-
-```
-# Sample response 
-
-```json
-{
-  "data": {
-    "requestPasswordReset": {
-      "message": "Password reset email sent. here is the token sent eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtMXZ6N3A1MTAwZnIwNzg2Z3UxZGxmc2siLCJlbWFpbCI6InNhbTFAZ21haWwuY29tIiwiaWF0IjoxNzI4MTIyMTEzLCJleHAiOjE3MjgxMjU3MTN9.d4RxcUupD_xpBnhoYfd5SVZ4u9_4KrOBGK8J59g8lAI",
-      "success": true
-    }
-  }
-}
-
-```
-
-
-
-### Reset password
-
-**Endpoint:** `http://localhost:8383/`
-
-**Method:** `POST`
-
-**GraphQL Query:**
-
-```graphql
-
-mutation {
-  resetPassword(
-    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtMXZ6N3A1MTAwZnIwNzg2Z3UxZGxmc2siLCJlbWFpbCI6InNhbTFAZ21haWwuY29tIiwiaWF0IjoxNzI4MTIyMTEzLCJleHAiOjE3MjgxMjU3MTN9.d4RxcUupD_xpBnhoYfd5SVZ4u9_4KrOBGK8J59g8lAI",
-    email: "sam1@gmail.com",
-    newPassword: "68798s9sjYYYjsRRRTY(*RTGFHH)" 
-  ) {
-    success
-    message
-  }
-}
-
-
-```
-# Sample response 
-
-```json
-{
-  "data": {
-    "resetPassword": {
-      "success": true,
-      "message": "Password reset successful."
-    }
-  }
-}
-
-```
-
-
-
-### Run test
-```bash
-npm test
-
-```
-
-
-
-# Challanges 
-
-While building the project i had some difficulty integratin mail for the OTP and reset, tried gpt and other online open source sources but could not be able to fully integrate it
-
-THANK YOU FOR THE OPPORTUNITY ONCE MORE TO SHOWCASE MY UNDERSTANDING OF THE SUBJECT
